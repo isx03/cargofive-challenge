@@ -10,6 +10,16 @@
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
+SET FOREIGN_KEY_CHECKS = 0;
+
+DROP TABLE IF EXISTS
+  `calculation_types`,
+  `carriers`,
+  `rates`,
+  `surcharge_concept_aliases`,
+  `surcharge_concepts`,
+  `surcharges`,
+  `users`;
 
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -233,6 +243,20 @@ INSERT INTO `surcharges` (`id`, `surcharge_concept_id`, `apply_to`, `calculation
 (23, 17, 'freight', 1, '2023-06-06 16:01:49', '2023-06-06 16:01:49'),
 (24, 3, 'destination', 2, '2023-06-06 16:01:49', '2023-06-06 16:01:49');
 
+CREATE TABLE `users` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `users_email_unique` (`email`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+INSERT INTO `users` (`id`, `name`, `email`, `password`, `created_at`, `updated_at`) VALUES
+(1,	'Israel',	'israel.flores@cargofive.com',	'$2y$10$qwYQhqOl0RxzZpMAJ6oDMe.Z.Rq8eT4YZM9actwO.OEBqxSeAPvLa',	'2023-07-17 22:06:05',	'2023-07-17 22:06:05');
+
 --
 -- Indexes for dumped tables
 --
@@ -349,6 +373,8 @@ ALTER TABLE `surcharges`
   ADD CONSTRAINT `surcharges_ibfk_1` FOREIGN KEY (`surcharge_concept_id`) REFERENCES `surcharge_concepts` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `surcharges_ibfk_2` FOREIGN KEY (`calculation_type_id`) REFERENCES `calculation_types` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
+
+SET FOREIGN_KEY_CHECKS = 1;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
