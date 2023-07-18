@@ -2,9 +2,6 @@
 
 namespace Tests;
 
-use Laravel\Lumen\Testing\DatabaseMigrations;
-use Laravel\Lumen\Testing\DatabaseTransactions;
-
 class AuthenticateTest extends TestCase
 {
     public function testThatAuthenticateEndpointReturnsSuccessfulResponse(): void
@@ -22,7 +19,7 @@ class AuthenticateTest extends TestCase
         );
     }
 
-    public function testAuthenticateEndpointWithParametersReturnsInternalErrorResponse(): void
+    public function testAuthenticateEndpointWithoutParametersReturnsInternalErrorResponse(): void
     {
 
         $this->post('/authenticate');

@@ -78,8 +78,8 @@ CREATE TABLE `rates` (
   `carrier_id` bigint UNSIGNED NOT NULL,
   `amount` float NOT NULL,
   `currency` varchar(256) NOT NULL,
-  `created_at` datetime DEFAULT NULL,
-  `updated_at` datetime DEFAULT NULL
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
@@ -89,46 +89,104 @@ CREATE TABLE `rates` (
 --
 
 CREATE TABLE `surcharge_concepts` (
-  `id` bigint UNSIGNED NOT NULL,
+  `id` bigint unsigned NOT NULL,
   `name` varchar(256) NOT NULL,
   `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` datetime ON UPDATE CURRENT_TIMESTAMP
+  `updated_at` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `surcharge_concepts`
+--
+INSERT INTO `surcharge_concepts` (`id`, `name`, `created_at`, `updated_at`) VALUES
+(1, 'Winter', '2023-07-17 16:34:36', NULL),
+(2, 'Bill of Lading', '2023-07-17 16:34:54', NULL),
+(3, 'Documentation', '2023-07-17 16:35:11', NULL),
+(4, 'Logistics', '2023-07-17 16:43:13', NULL),
+(5, 'Arbitrary', '2023-07-17 16:47:06', NULL),
+(6, 'Bunker Adjustment', '2023-07-17 16:50:51', NULL),
+(7, 'Basic', '2023-07-17 16:56:13', NULL),
+(8, 'Ocean', '2023-07-17 16:57:59', NULL),
+(9, 'Booking', '2023-07-17 16:59:59', NULL),
+(10, 'Cesion', '2023-07-17 17:01:55', NULL),
+(11, 'VGM', '2023-07-17 17:03:21', NULL),
+(12, 'Terminal Handling', '2023-07-17 17:13:02', NULL),
+(13, 'T3', '2023-07-17 17:17:44', NULL),
+(14, 'Peak Season', '2023-07-17 17:22:40', NULL),
+(15, 'Port', '2023-07-17 17:26:43', NULL),
+(16, 'Overweight', '2023-07-17 17:31:21', NULL),
+(17, 'ISPS', '2023-07-17 17:33:46', NULL);
+
+
+--
+-- Table structure for table `surcharge_concept_aliases`
+--
+
+CREATE TABLE `surcharge_concept_aliases` (
+  `id` bigint unsigned NOT NULL,
+  `name` varchar(256) NOT NULL,
+  `surcharge_concept_id` bigint UNSIGNED NOT NULL,
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `surcharge_concepts`
 --
 
-INSERT INTO `surcharge_concepts` (`id`, `name`) VALUES
-(1, 'Winter Surcharge'),
-(2, 'Winter Charge'),
-(3, 'Bill of Lading Fee'),
-(4, 'Documentation Fee'),
-(5, 'Logistics Fee'),
-(6, 'Arbitrary Charge'),
-(7, 'Bunker Adjustment Fee'),
-(8, 'Bunker Adjustment Factor'),
-(9, 'Bunker Adjustment Charge'),
-(10, 'BAF Fee'),
-(11, 'Basic Fee'),
-(12, 'Basic Ocean Fee'),
-(13, 'Ocean Charge'),
-(14, 'Ocean Fee'),
-(15, 'Booking  Fee'),
-(16, 'Booking  Charge'),
-(17, 'Cesion transporte Fee'),
-(18, 'VGM Fee'),
-(19, 'Terminal Handling Fee'),
-(20, 'Terminal Fee'),
-(21, 'T3 Fee'),
-(22, 'Peak Season Surcharge'),
-(23, 'Peak Season Factor'),
-(24, 'Port Charge Import'),
-(25, 'Port Charge Export'),
-(26, 'Port Charges'),
-(27, 'Overweight Fee'),
-(28, 'Overweight surcharge'),
-(29, 'ISPS Fee');
+INSERT INTO `surcharge_concept_aliases` (`id`, `name`, `surcharge_concept_id`, `created_at`, `updated_at`) VALUES
+(1, 'WINTER SURCHARGE', 1, '2023-07-17 16:35:32', '2023-07-17 17:40:13'),
+(2, 'WINTER CHARGE', 1, '2023-07-17 16:35:43', '2023-07-17 17:40:13'),
+(3, 'BL', 2, '2023-07-17 16:37:27', '2023-07-17 12:40:21'),
+(4, 'BL FEE', 2, '2023-07-17 16:37:41', '2023-07-17 17:40:13'),
+(5, 'B/L FEE', 2, '2023-07-17 16:37:52', '2023-07-17 17:40:13'),
+(6, 'BILL OF LADING (BL)', 2, '2023-07-17 11:44:49', '2023-07-17 17:40:13'),
+(7, 'DOC FEE', 3, '2023-07-17 11:44:58', '2023-07-17 17:40:13'),
+(8, 'DOC FEES', 3, '2023-07-17 11:45:01', '2023-07-17 17:40:13'),
+(9, 'DOCUMENTATION FEE', 3, '2023-07-17 11:45:04', '2023-07-17 17:40:13'),
+(10, 'LOG FEE', 4, '2023-07-17 16:44:40', '2023-07-17 12:40:24'),
+(11, 'LOGISTICS FEE', 4, '2023-07-17 16:51:29', '2023-07-17 12:40:28'),
+(12, 'ARBITRARY CHARGE DESTINATION', 5, '2023-07-17 16:51:29', '2023-07-17 17:40:13'),
+(13, 'ARBITRARY CHARGE ORIGIN', 5, '2023-07-17 16:51:29', '2023-07-17 17:40:13'),
+(14, 'ARBITRARY CHARGE O', 5, '2023-07-17 16:51:29', '2023-07-17 17:40:13'),
+(15, 'ARBITRARY CHARGE D', 5, '2023-07-17 16:51:29', '2023-07-17 17:40:13'),
+(16, 'BUNKER ADJUSTMENT FEE', 6, '2023-07-17 16:51:29', '2023-07-17 17:40:13'),
+(17, 'BUNKER ADJUSTMENT FACTOR', 6, '2023-07-17 16:51:29', '2023-07-17 17:40:13'),
+(18, 'BUNKER ADJUSTMENT CHARGE', 6, '2023-07-17 16:51:29', '2023-07-17 17:40:13'),
+(19, 'BUNKER ADJUSTMENT', 6, '2023-07-17 16:53:23', '2023-07-17 17:40:13'),
+(20, 'BASIC FREIGHT', 7, '2023-07-17 17:00:40', '2023-07-17 17:40:13'),
+(21, 'BASIC OCEAN FREIGHT', 8, '2023-07-17 17:00:40', '2023-07-17 17:40:13'),
+(22, 'OCEAN FREIGHT CHARGE', 8, '2023-07-17 17:00:40', '2023-07-17 17:40:13'),
+(23, 'OCEAN FREIGHT', 8, '2023-07-17 17:00:40', '2023-07-17 17:40:13'),
+(24, 'BOOKING FEE', 9, '2023-07-17 17:00:40', '2023-07-17 17:40:13'),
+(25, 'BOOKING SERVICE CHARGE', 9, '2023-07-17 17:00:40', '2023-07-17 17:40:13'),
+(26, 'BOOKING CHARGE', 9, '2023-07-17 17:03:32', '2023-07-17 17:40:13'),
+(27, 'CESION TRANSPORTE', 10, '2023-07-17 17:03:32', '2023-07-17 17:40:13'),
+(28, 'CESION TTE', 10, '2023-07-17 17:03:32', '2023-07-17 17:40:13'),
+(29, 'CESION', 10, '2023-07-17 17:03:32', '2023-07-17 17:40:13'),
+(30, 'VGM', 11, '2023-07-17 17:03:32', '2023-07-17 12:40:37'),
+(31, 'VGM FEE', 11, '2023-07-17 17:14:30', '2023-07-17 17:40:13'),
+(32, 'TERMINAL HANDLING', 12, '2023-07-17 17:14:30', '2023-07-17 17:40:13'),
+(33, 'TERMINAL HANDLING CHARGE O', 12, '2023-07-17 17:14:30', '2023-07-17 17:40:13'),
+(34, 'TERMINAL HANDLING CHARGE', 12, '2023-07-17 17:14:30', '2023-07-17 17:40:13'),
+(35, 'TERMINAL HANDLING CHARGE ORIGIN', 12, '2023-07-17 17:14:30', '2023-07-17 17:40:13'),
+(36, 'TERMINAL HANDLING CHARGE DESTINATION', 12, '2023-07-17 17:14:30', '2023-07-17 17:40:13'),
+(37, 'TERMINAL HANDLING CHARGE (D)', 12, '2023-07-17 17:21:27', '2023-07-17 17:40:13'),
+(38, 'T3', 13, '2023-07-17 17:21:27', '2023-07-17 12:40:37'),
+(39, 'T-3', 13, '2023-07-17 17:21:27', '2023-07-17 12:40:37'),
+(40, 'T3 FEE', 13, '2023-07-17 17:21:27', '2023-07-17 17:40:13'),
+(41, 'T3 ORIGIN', 13, '2023-07-17 17:21:27', '2023-07-17 17:40:13'),
+(42, 'PEAK SEASON SURCHARGE', 14, '2023-07-17 17:26:24', '2023-07-17 17:40:13'),
+(43, 'PSS', 14, '2023-07-17 17:26:24', '2023-07-17 12:40:37'),
+(44, 'PEAK SEASON ADJUSTMENT FACTOR', 14, '2023-07-17 17:26:24', '2023-07-17 17:40:13'),
+(45, 'PORT CHARGES IMPORT', 15, '2023-07-17 17:33:20', '2023-07-17 17:40:13'),
+(46, 'PORT CHARGES EXPORT', 15, '2023-07-17 17:33:20', '2023-07-17 17:40:13'),
+(47, 'PORT CHARGES DESTINATION', 15, '2023-07-17 17:33:20', '2023-07-17 17:40:13'),
+(48, 'OVERWEIGHT', 16, '2023-07-17 17:33:20', '2023-07-17 17:40:13'),
+(49, 'OVERWEIGHT SURCHARGE', 16, '2023-07-17 17:33:20', '2023-07-17 17:40:13'),
+(50, 'ISPS', 17, '2023-07-17 17:34:02', '2023-07-17 12:40:37'),
+(51, 'PEAK SEASON', 14, '2023-07-17 17:39:08', '2023-07-17 17:40:13');
+
 
 -- --------------------------------------------------------
 
@@ -141,67 +199,39 @@ CREATE TABLE `surcharges` (
   `surcharge_concept_id` bigint UNSIGNED NOT NULL,
   `apply_to` enum('origin','freight','destination','') NOT NULL,
   `calculation_type_id` bigint UNSIGNED NOT NULL,
-  `created_at` datetime DEFAULT NULL,
-  `updated_at` datetime DEFAULT NULL
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `surcharges`
 --
 
-INSERT INTO `surcharges` (`id`, `name`, `apply_to`, `calculation_type_id`, `created_at`, `updated_at`) VALUES
-(1, 'Winter Surcharge', 'freight', 1, '2023-06-05 16:30:00', '2023-06-05 16:30:00'),
-(2, 'Winter charge', 'freight', 1, '2023-06-05 16:30:00', '2023-06-05 16:30:00'),
-(3, 'BL', 'freight', 2, '2023-06-05 16:30:00', '2023-06-05 16:30:00'),
-(4, 'BL Fee', 'freight', 2, '2023-06-05 16:30:00', '2023-06-05 16:30:00'),
-(5, 'B/L fee', 'origin', 2, '2023-06-05 16:30:00', '2023-06-05 16:30:00'),
-(6, 'Doc fee', 'origin', 2, '2023-06-05 16:30:00', '2023-06-05 16:30:00'),
-(7, 'Doc fees', 'origin', 2, '2023-06-05 16:30:00', '2023-06-05 16:30:00'),
-(8, 'Documentation Fee', 'origin', 2, '2023-06-05 16:30:00', '2023-06-05 16:30:00'),
-(9, 'LOG FEE ', 'freight', 2, '2023-06-05 16:30:00', '2023-06-05 16:30:00'),
-(10, 'LOGISTICS FEE ', 'freight', 2, '2023-06-05 16:30:00', '2023-06-05 16:30:00'),
-(11, 'Arbitrary Charge Destination', 'destination', 1, '2023-06-05 16:30:00', '2023-06-05 16:30:00'),
-(12, 'Arbitrary Charge Origin', 'origin', 1, '2023-06-05 16:30:00', '2023-06-05 16:30:00'),
-(13, 'Arbitrary Charge O', 'origin', 1, '2023-06-05 16:30:00', '2023-06-05 16:30:00'),
-(14, 'Arbitrary Charge D', 'destination', 1, '2023-06-05 16:30:00', '2023-06-05 16:30:00'),
-(15, 'Bunker Adjustment Fee', 'freight', 1, '2023-06-05 16:30:00', '2023-06-05 16:30:00'),
-(16, 'Bunker Adjustment Factor', 'freight', 1, '2023-06-05 16:30:00', '2023-06-05 16:30:00'),
-(17, 'Bunker Adjustment Charge', 'freight', 1, '2023-06-05 16:30:00', '2023-06-05 16:30:00'),
-(18, 'BAF', 'freight', 1, '2023-06-05 16:30:00', '2023-06-05 16:30:00'),
-(19, 'Basic Freight', 'freight', 1, '2023-06-05 16:30:00', '2023-06-05 16:30:00'),
-(20, 'Basic Ocean Freight', 'freight', 1, '2023-06-05 16:30:00', '2023-06-05 16:30:00'),
-(21, 'Ocean Freight Charge', 'freight', 1, '2023-06-05 16:30:00', '2023-06-05 16:30:00'),
-(22, 'Ocean Freight', 'freight', 1, '2023-06-05 16:30:00', '2023-06-05 16:30:00'),
-(23, 'Bill of Lading (BL)', 'freight', 2, '2023-06-05 16:30:00', '2023-06-05 16:30:00'),
-(24, 'Booking fee', 'freight', 2, '2023-06-05 16:30:00', '2023-06-05 16:30:00'),
-(25, 'Booking Service Charge', 'freight', 2, '2023-06-05 16:30:00', '2023-06-05 16:30:00'),
-(26, 'Booking Charge', 'freight', 2, '2023-06-05 16:30:00', '2023-06-05 16:30:00'),
-(27, 'Cesion transporte', 'destination', 1, '2023-06-05 16:30:00', '2023-06-05 16:30:00'),
-(28, 'Cesion Tte', 'destination', 1, '2023-06-05 16:30:00', '2023-06-05 16:30:00'),
-(29, 'Cesion', 'destination', 1, '2023-06-05 16:30:00', '2023-06-05 16:30:00'),
-(30, 'VGM', 'origin', 1, '2023-06-06 16:01:49', '2023-06-06 16:01:49'),
-(31, 'VGM Fee', 'destination', 1, '2023-06-06 16:01:49', '2023-06-06 16:01:49'),
-(32, 'Terminal Handling', 'origin', 1, '2023-06-05 16:30:00', '2023-06-05 16:30:00'),
-(33, 'Terminal Handling charge', 'destination', 1, '2023-06-05 16:30:00', '2023-06-05 16:30:00'),
-(34, 'Terminal Handling Charge O', 'origin', 1, '2023-06-05 16:30:00', '2023-06-05 16:30:00'),
-(35, 'Terminal Handling Charge Origin', 'origin', 1, '2023-06-05 16:30:00', '2023-06-05 16:30:00'),
-(36, 'Terminal Handling Charge Destination', 'destination', 1, '2023-06-05 16:30:00', '2023-06-05 16:30:00'),
-(37, 'Terminal Handling Charge (D)', 'destination', 1, '2023-06-05 16:30:00', '2023-06-05 16:30:00'),
-(38, 'Terminal fees', 'origin', 1, '2023-06-05 16:30:00', '2023-06-05 16:30:00'),
-(39, 'Tasa T3', 'origin', 1, '2023-06-05 16:30:00', '2023-06-05 16:30:00'),
-(40, 'T-3', 'origin', 1, '2023-06-05 16:30:00', '2023-06-05 16:30:00'),
-(41, 'T3', 'destination', 1, '2023-06-05 16:30:00', '2023-06-05 16:30:00'),
-(42, 'T3 fee', 'destination', 1, '2023-06-05 16:30:00', '2023-06-05 16:30:00'),
-(43, 'Peak Season Surcharge', 'freight', 1, '2023-06-05 16:30:00', '2023-06-05 16:30:00'),
-(44, 'PSS', 'freight', 1, '2023-06-05 16:30:00', '2023-06-05 16:30:00'),
-(45, 'Peak Season Adjustment Factor ', 'freight', 1, '2023-06-05 16:30:00', '2023-06-05 16:30:00'),
-(46, 'Port Charges Import', 'destination', 2, '2023-06-05 16:30:00', '2023-06-05 16:30:00'),
-(47, 'Port Charges Export', 'origin', 2, '2023-06-05 16:30:00', '2023-06-05 16:30:00'),
-(48, 'Port Charges Destination', 'destination', 2, '2023-06-05 16:30:00', '2023-06-05 16:30:00'),
-(49, 'Overweight', 'freight', 1, '2023-06-05 16:30:00', '2023-06-05 16:30:00'),
-(50, 'Overweight surcharge', 'freight', 1, '2023-06-05 16:30:00', '2023-06-05 16:30:00'),
-(51, 'ISPS', 'freight', 1, '2023-06-06 16:01:49', '2023-06-06 16:01:49'),
-(52, 'ISPS', 'freight', 1, '2023-06-06 16:01:49', '2023-06-06 16:01:49');
+INSERT INTO `surcharges` (`id`, `surcharge_concept_id`, `apply_to`, `calculation_type_id`, `created_at`, `updated_at`) VALUES
+(1, 1, 'freight', 1, '2023-06-05 16:30:00', '2023-06-05 16:30:00'),
+(2, 2, 'freight', 2, '2023-06-05 16:30:00', '2023-06-05 16:30:00'),
+(3, 2, 'origin', 2, '2023-06-05 16:30:00', '2023-06-05 16:30:00'),
+(4, 3, 'origin', 2, '2023-06-05 16:30:00', '2023-06-05 16:30:00'),
+(5, 4, 'freight', 2, '2023-06-05 16:30:00', '2023-06-05 16:30:00'),
+(6, 5, 'destination', 1, '2023-06-05 16:30:00', '2023-06-05 16:30:00'),
+(7, 5, 'origin', 1, '2023-06-05 16:30:00', '2023-06-05 16:30:00'),
+(8, 6, 'freight', 1, '2023-06-05 16:30:00', '2023-06-05 16:30:00'),
+(9, 7, 'freight', 1, '2023-06-05 16:30:00', '2023-06-05 16:30:00'),
+(10, 8, 'freight', 1, '2023-06-05 16:30:00', '2023-06-05 16:30:00'),
+(11, 9, 'freight', 2, '2023-06-05 16:30:00', '2023-06-05 16:30:00'),
+(12, 10, 'destination', 1, '2023-06-05 16:30:00', '2023-06-05 16:30:00'),
+(13, 11, 'origin', 1, '2023-06-06 16:01:49', '2023-06-06 16:01:49'),
+(14, 11, 'destination', 1, '2023-06-06 16:01:49', '2023-06-06 16:01:49'),
+(15, 12, 'origin', 1, '2023-06-05 16:30:00', '2023-06-05 16:30:00'),
+(16, 12, 'destination', 1, '2023-06-05 16:30:00', '2023-06-05 16:30:00'),
+(17, 13, 'origin', 1, '2023-06-05 16:30:00', '2023-06-05 16:30:00'),
+(18, 13, 'destination', 1, '2023-06-05 16:30:00', '2023-06-05 16:30:00'),
+(19, 14, 'freight', 1, '2023-06-05 16:30:00', '2023-06-05 16:30:00'),
+(20, 15, 'destination', 2, '2023-06-05 16:30:00', '2023-06-05 16:30:00'),
+(21, 15, 'origin', 2, '2023-06-05 16:30:00', '2023-06-05 16:30:00'),
+(22, 16, 'freight', 1, '2023-06-05 16:30:00', '2023-06-05 16:30:00'),
+(23, 17, 'freight', 1, '2023-06-06 16:01:49', '2023-06-06 16:01:49'),
+(24, 3, 'destination', 2, '2023-06-06 16:01:49', '2023-06-06 16:01:49');
 
 --
 -- Indexes for dumped tables
@@ -228,17 +258,25 @@ ALTER TABLE `rates`
   ADD KEY `carrier_id_index` (`carrier_id`);
 
 --
--- Indexes for table `surcharges`
---
-ALTER TABLE `surcharges`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `calculation_type_id` (`calculation_type_id`);
-
---
 -- Indexes for table `surcharge_concepts`
 --
 ALTER TABLE `surcharge_concepts`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `surcharge_concept_aliases`
+--
+ALTER TABLE `surcharge_concept_aliases`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `surcharge_concepts` (`surcharge_concept_id`);
+
+--
+-- Indexes for table `surcharges`
+--
+ALTER TABLE `surcharges`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `surcharge_concepts` (`surcharge_concept_id`),
+  ADD KEY `calculation_type_id` (`calculation_type_id`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -263,16 +301,28 @@ ALTER TABLE `rates`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `surcharge_concepts`
+--
+ALTER TABLE `surcharge_concepts`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+
+--
+-- AUTO_INCREMENT for table `surcharge_concept_aliases`
+--
+ALTER TABLE `surcharge_concept_aliases`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
+
+--
+-- AUTO_INCREMENT for table `surcharges`
+--
+ALTER TABLE `surcharges`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+
+--
 -- AUTO_INCREMENT for table `surcharges`
 --
 ALTER TABLE `surcharges`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
-
---
--- AUTO_INCREMENT for table `surcharge_concepts`
---
-ALTER TABLE `surcharge_concepts`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 
 --
 -- Constraints for dumped tables
@@ -288,8 +338,16 @@ ALTER TABLE `rates`
 --
 -- Constraints for table `surcharges`
 --
+ALTER TABLE `surcharge_concept_aliases`
+  ADD CONSTRAINT `surcharge_concept_aliases_ibfk_1` FOREIGN KEY (`surcharge_concept_id`) REFERENCES `surcharge_concepts` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+COMMIT;
+
+--
+-- Constraints for table `surcharges`
+--
 ALTER TABLE `surcharges`
-  ADD CONSTRAINT `surcharges_ibfk_1` FOREIGN KEY (`calculation_type_id`) REFERENCES `calculation_types` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `surcharges_ibfk_1` FOREIGN KEY (`surcharge_concept_id`) REFERENCES `surcharge_concepts` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `surcharges_ibfk_2` FOREIGN KEY (`calculation_type_id`) REFERENCES `calculation_types` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

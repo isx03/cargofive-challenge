@@ -4,22 +4,19 @@ namespace App\Services;
 
 use App\Models\Carrier;
 use App\Models\Surcharge;
-use App\Models\SurchargeAlias;
 use Illuminate\Http\UploadedFile;
+use App\Models\SurchargeConceptAlias;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 
 class SpreadsheetLoadRates
 {
-
-    const TYPE_APPLIES = ['origin','freight','destination'];
-
     public function __construct(UploadedFile $excelFile)
     {
         $spreadsheet = IOFactory::load($excelFile->getRealPath());
         $this->sheet = $spreadsheet->getActiveSheet();
         $this->rows = [];
         $this->carrierNames = [];
-        $this->surchargeAliases = [];
+        $this->patternsConceptApplyTo = [];
     }
 
     private function getCarriersByNames(): array
@@ -31,38 +28,73 @@ class SpreadsheetLoadRates
 
     private function getSurchargesByPattern(): array
     {
-        $surcharges = array_values($this->surchargeAliases);
-        $conditions = array_map(function($surcharge){
-            return "(name='{$surcharge['surcharge']}' AND apply_to='{$surcharge['apply_to']}')";
-        }, $surcharges);
+        $conditions = array_map(function($pattern){
+            return "(CONCAT(surcharge_concept_aliases.name,'-',surcharges.apply_to) = '{$pattern}')";
+        }, $this->patternsConceptApplyTo);
         $conditions = implode(' OR ', $conditions);
-        return Surcharge::selectRaw('id, CONCAT(name,"-",apply_to) AS pattern')
-                ->whereRaw($conditions)
-                ->get()
-                ->toArray();
+        return Surcharge::selectRaw('surcharges.id AS surcharge_id,
+            surcharge_concepts.id AS surcharge_concept_id,
+            surcharge_concepts.name AS surcharge_concept_name,
+            surcharges.apply_to,
+            surcharge_concept_aliases.name AS surcharge_concept_alias,
+            CONCAT(surcharge_concept_aliases.name,"-",surcharges.apply_to) AS pattern')
+            ->join('surcharge_concepts', 'surcharges.surcharge_concept_id', '=', 'surcharge_concepts.id')
+            ->join('surcharge_concept_aliases', 'surcharge_concept_aliases.surcharge_concept_id', '=', 'surcharge_concepts.id')
+            ->whereRaw($conditions)
+            ->get()
+            ->toArray();
     }
 
-    private function validateCarriersAndSurchargeAliases(): void
+    private function validateCarriersAndSurcharge(): void
     {
         $carriersDb = Carrier::whereIn('name', $this->carrierNames)
                         ->get()
                         ->toArray();
-        $surchargesDb = SurchargeAlias::whereIn('name', $this->surchargeAliases)
-                        ->get()
-                        ->toArray();
+        $surchargesDb = $this->getSurchargesByPattern();
         foreach($this->rows as $key => $row){
             // validate if carrier name of excel file exist in database
             $positionCarrier = findPositionOfObjectByColumnAndValue($row['carrier'], 'name', $carriersDb);
             if($positionCarrier === false){
                 throw new \ErrorException("Fila {$row['number']}: carrier {$row['carrier']} does not exist", 404);
             }
-            // validate is surcharge alias of excel file exist in database
-            $positionSurchargeAlias = findPositionOfObjectByColumnAndValue($row['surcharge_alias'], 'name', $surchargesDb);
-            if($positionSurchargeAlias === false){
-                throw new \ErrorException("Fila {$row['number']}: surcharge alias '{$row['surcharge_alias']}' does not exist", 404);
+            // validate is surcharge config of excel file exist in database
+            $positionSurchargeConceptAlias = findPositionOfObjectByColumnAndValue($row['pattern_concept_apply_to'], 'pattern', $surchargesDb);
+            if($positionSurchargeConceptAlias === false){
+                throw new \ErrorException("Fila {$row['number']}: config does not exist surcharge concept alias '{$row['surcharge_concept_alias']}' apply to '{$row['apply_to']}'", 404);
             }
             $this->rows[$key]["carrier_id"] = $carriersDb[$positionCarrier]["id"];
-            $this->rows[$key]["surcharge_id"] = $surchargesDb[$positionSurchargeAlias]["surcharge_id"];
+            $this->rows[$key]["surcharge_id"] = $surchargesDb[$positionSurchargeConceptAlias]["surcharge_id"];
+        }
+    }
+
+    private function validateRow(array $row): void
+    {
+        if( empty($row["surcharge_concept_alias"]) ){
+            throw new \ErrorException("Fila {$row['number']}: Surcharge is required", 400);
+        }
+
+        if( empty($row["carrier"]) ){
+            throw new \ErrorException("Fila {$row['number']}: Carrier is required", 400);
+        }
+
+        if( empty($row["amount"]) ){
+            throw new \ErrorException("Fila {$row['number']}: Amount is required", 400);
+        }
+
+        if(filter_var($row["amount"], FILTER_VALIDATE_FLOAT) === false){
+            throw new \ErrorException("Fila {$row['number']}: amount is a invalid value", 400);
+        }
+
+        if( empty($row["currency"]) ){
+            throw new \ErrorException("Fila {$row['number']}: Currency is required", 400);
+        }
+
+        if( empty($row["apply_to"]) ){
+            throw new \ErrorException("Fila {$row['number']}: Apply to is required", 400);
+        }
+
+        if(!in_array($row['apply_to'], Surcharge::TYPE_APPLIES)){
+            throw new \ErrorException("Fila {$row['number']}: A pply to must be origin, freight or destination", 400);
         }
     }
 
@@ -73,19 +105,22 @@ class SpreadsheetLoadRates
         foreach($rowRange as $rowNumber){
             $row = [
                 "number" => $rowNumber,
-                "surcharge_alias" => cleanString($this->sheet->getCell( 'A' . $rowNumber )->getValue()),
-                "carrier" => cleanString($this->sheet->getCell( 'B' . $rowNumber )->getValue()),
+                "surcharge_concept_alias" => strtoupper(cleanString($this->sheet->getCell( 'A' . $rowNumber )->getValue())),
+                "carrier" => strtoupper(cleanString($this->sheet->getCell( 'B' . $rowNumber )->getValue())),
                 "amount" => cleanString($this->sheet->getCell( 'C' . $rowNumber )->getValue()),
-                "currency" => cleanString($this->sheet->getCell( 'D' . $rowNumber )->getValue()),
+                "currency" => strtoupper(cleanString($this->sheet->getCell( 'D' . $rowNumber )->getValue())),
                 "apply_to" => cleanString($this->sheet->getCell( 'E' . $rowNumber )->getValue())
             ];
 
-            //TODO: MAKE VALIDATIONS OF ROW
+            $this->validateRow($row);
 
-            if( !in_array($row['surcharge_alias'], $this->surchargeAliases) ){
-                $this->surchargeAliases[] = $row['surcharge_alias'];
+            // catch pattern concept and apply to without repeat itself
+            $patternConceptApplyTo = "{$row['surcharge_concept_alias']}-{$row['apply_to']}";
+            $row["pattern_concept_apply_to"] = $patternConceptApplyTo;
+            if( !in_array($patternConceptApplyTo, $this->patternsConceptApplyTo) ){
+                $this->patternsConceptApplyTo[] = $patternConceptApplyTo;
             }
-
+            // catch carriers without repeat itself
             if( !in_array($row['carrier'], $this->carrierNames) ){
                 $this->carrierNames[] = $row['carrier'];
             }
@@ -93,7 +128,7 @@ class SpreadsheetLoadRates
             $this->rows[] = $row;
         }
 
-        $this->validateCarriersAndSurchargeAliases();
+        $this->validateCarriersAndSurcharge();
 
         return $this->rows;
     }

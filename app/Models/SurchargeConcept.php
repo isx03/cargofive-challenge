@@ -4,15 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Surcharge extends Model
+class SurchargeConcept extends Model
 {
-    const TYPE_APPLIES = ['origin','freight','destination'];
     /**
      * The table associated with the model.
      *
      * @var string
      */
-    protected $table = 'surcharges';
+    protected $table = 'surcharge_concepts';
     
     /**
      * Indicates if the model should be timestamped.

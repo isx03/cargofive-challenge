@@ -2,17 +2,17 @@
 
 namespace App\Models;
 
+use App\Models\SurchargeConcept;
 use Illuminate\Database\Eloquent\Model;
 
-class Surcharge extends Model
+class SurchargeConceptAlias extends Model
 {
-    const TYPE_APPLIES = ['origin','freight','destination'];
     /**
      * The table associated with the model.
      *
      * @var string
      */
-    protected $table = 'surcharges';
+    protected $table = 'surcharge_concept_aliases';
     
     /**
      * Indicates if the model should be timestamped.
@@ -20,4 +20,9 @@ class Surcharge extends Model
      * @var bool
      */
     public $timestamps = false;
+
+    public function surchargeConcept(): BelongsTo
+    {
+        return $this->belongsTo(SurchargeConcept::class);
+    }
 }

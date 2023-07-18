@@ -28,6 +28,6 @@ $router->group([
     'prefix' => 'rates',
     'middleware' => ['jwt'] 
 ], function() use ($router){
-    $router->post('load', 'RatesController@loadRates');
-    $router->get('surcharges', 'RatesController@ratesBySurcharges');
+    $router->post('/', 'RatesController@loadRates');
+    $router->get('/', 'RatesController@ratesBySurcharges');
 });
