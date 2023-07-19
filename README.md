@@ -34,7 +34,7 @@ Example to standarize concept with aliases.
 - [Composer](https://getcomposer.org).
 - [MySQL](https://www.mysql.com)
 - [Docker](https://www.docker.com) *(optional)*
-- [Docker Compose](https://www.docker.com) *(optional)*
+- [Docker Compose](https://docs.docker.com/compose) *(optional)*
 - We must create two databases, one to normal use and the other for tests. Examples: cargofive, cargofice_test
 
 ![alt text](./readme-files/dbs-examples.png)
