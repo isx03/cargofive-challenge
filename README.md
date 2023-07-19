@@ -82,7 +82,7 @@ Example to standarize concept with aliases.
 
 ![alt text](./readme-files/run-unit-test.png)
 
-## Executions if you want to use Docker Compose
+## Start application with Docker Compose
 
 - Clone repository
 
