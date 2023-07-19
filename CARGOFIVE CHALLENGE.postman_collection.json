@@ -1,0 +1,200 @@
+{
+	"info": {
+		"_postman_id": "3b384e1e-5262-4c56-a6a6-8ad39eb3d152",
+		"name": "CARGOFIVE CHALLENGE",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "3166724"
+	},
+	"item": [
+		{
+			"name": "load reates",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0IiwiaWF0IjoxNjg5NzI3MTI3LCJuYmYiOjE2ODk3MjcxMjcsImV4cCI6MTY4OTcyNzg0NywiZGF0YSI6eyJuYW1lIjoiSXNyYWVsIiwiZW1haWwiOiJpc3JhZWwuZmxvcmVzQGNhcmdvZml2ZS5jb20ifX0.FnYwKVTnQRfZhSggWYMF3NHMZoSVyWfHPnvfA3OK1PbUv3KHfIsX8CnzcVbXRrsA8nsifK6FH-BQy5dOOjDIAg",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"type": "file",
+							"src": "/media/isx/data/workstation/local/challenges/cargofive-challenge/challenge-files/ChallengeRates.xlsx",
+							"disabled": true
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8000/rates",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"rates"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "authenticate",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const response = pm.response.json()",
+							"pm.variables.set(\"TOKEN_CARGOFIVE\", response.token)",
+							"console.log(response.token)"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "email",
+							"value": "israel.flores@cargofive.com",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "cargofive123.",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8000/authenticate",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"authenticate"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "vizualize rates",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0IiwiaWF0IjoxNjg5NzI0OTg1LCJuYmYiOjE2ODk3MjQ5ODUsImV4cCI6MTY4OTcyNTcwNSwiZGF0YSI6eyJuYW1lIjoiSXNyYWVsIiwiZW1haWwiOiJpc3JhZWwuZmxvcmVzQGNhcmdvZml2ZS5jb20ifX0.ZeiVLTAkk7WvUdhCOXWkvubOEGWXnukJFs12M69dYQL_hJLGXDzQOy4XLfcOkhZnUQe-6d-y0JJ7_A3YQeban",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"url": {
+					"raw": "http://localhost:8000/rates?surcharge_concept_id=3",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"rates"
+					],
+					"query": [
+						{
+							"key": "surcharge_concept_id",
+							"value": "3"
+						},
+						{
+							"key": "carrier_id",
+							"value": "1",
+							"disabled": true
+						},
+						{
+							"key": "apply_to",
+							"value": "origin",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Hi",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0IiwiaWF0IjoxNjg5MzEwMDc1LCJuYmYiOjE2ODkzMTAwNzUsImV4cCI6MTY4OTMxMDQzNSwiZGF0YSI6eyJuYW1lIjoiSXNyYWVsIiwiZW1haWwiOiJpc3JhZWwuZmxvcmVzQGNhcmdvZml2ZS5jb20ifX0.MXoGnL4YIPF0u9lZ-lJJrBvY5YbsFbm2b2PNvXaOB1I4lco1HSJtePBsgK1mcDhpO8fePT4O-fgdu0kQtZmX8w",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"type": "file",
+							"src": "/media/isx/data/workstation/local/challenges/cargofive-challenge/challenge-files/ChallengeRates.xlsx"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8000/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						""
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

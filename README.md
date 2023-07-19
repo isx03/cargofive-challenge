@@ -84,15 +84,18 @@ Example to standarize concept with aliases.
 
 ## Start application with Docker Compose
 
-- Clone repository
+1. Clone repository
 
-- Create docker image *(only the first time)
+2. Create docker image *(only the first time)
     > docker compose build --no-cache
 
-- Start Container
+3. Install composer dependencies
+    > docker compose run --rm api-cargofive composer install
+
+4. Start Container
     > docker compose up -d
 
-- Run seeder for restore database:
+5. Run seeder for restore database: *(only the first time)
     > docker compose exec api-cargofive php artisan db:seed
 
 ## Execute Unit Tests with Docker Compose
