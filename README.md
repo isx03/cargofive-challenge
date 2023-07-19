@@ -99,6 +99,7 @@ Example to standarize concept with aliases.
     > docker compose exec api-cargofive php artisan db:seed
 
 ## Execute Unit Tests with Docker Compose
+For execute unit test the containers must be run: ```docker compose up -d```
 
 - Execute:
     > docker compose exec api-cargofive ./vendor/bin/phpunit
