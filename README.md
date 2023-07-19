@@ -82,6 +82,26 @@ Example to standarize concept with aliases.
 
 ![alt text](./readme-files/run-unit-test.png)
 
+## Executions if you want to use Docker Compose
+
+- Clone repository
+
+- Create docker image *(only the first time)
+    > docker compose build --no-cache
+
+- Start Container
+    > docker compose up -d
+
+- Run seeder for restore database:
+    > docker compose exec api-cargofive php artisan db:seed
+
+## Execute Unit Tests with Docker Compose
+
+- Execute:
+    > docker compose exec api-cargofive ./vendor/bin/phpunit
+
+    ![alt text](./readme-files/run-unit-test-docker.png)
+
 ## ENDPOINTS
 For test the endpoints you must use this credentials:
 - **user:** israel.flores@cargofive.com

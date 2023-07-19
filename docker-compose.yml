@@ -1,0 +1,20 @@
+version: '3.7'
+
+services:
+  api-cargofive:
+    build: .
+    command: "ash -c 'php -S 0.0.0.0:8000 -t public'"
+    ports:
+      - 0.0.0.0:${API_EXTERNAL_PORT}:8000
+    volumes:
+      - .:/app/
+  mysql-cargofive:
+    image: mysql:8.0.32
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 123
+      MYSQL_DATABASE: cargofive
+    ports:
+      - ${MYSQL_EXTERNAL_PORT}:3306
+
