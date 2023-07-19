@@ -1,9 +1,5 @@
 FROM php:8.1-fpm-alpine
 
-# WORKDIR /var/www
-
-# ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
-
 RUN apk update && apk add \
     build-base \
     freetype-dev \
